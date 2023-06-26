@@ -1,0 +1,21 @@
+.root {
+	display: inline-block;
+	border-radius: 10px;
+	border: 1px solid #000;
+	overflow: hidden;
+	height: 100%;
+}
+
+.image {
+	width: 100%;
+	aspect-ratio: 3/2;
+	object-fit: cover;
+}
+
+.content {
+	padding: 10px;
+}
+
+.title {
+	font-weight: 500;
+}

@@ -1,0 +1,21 @@
+.root {
+	margin: 0 auto;
+	padding: 0 16px;
+	width: 100%;
+
+	@media (min-width: 576px) {
+		width: 540px;
+	}
+
+	@media (min-width: 768px) {
+		width: 768px;
+	}
+
+	@media (min-width: 1024px) {
+		width: 1024px;
+	}
+
+	@media (min-width: 1230px) {
+		width: 1230px;
+	}
+}
