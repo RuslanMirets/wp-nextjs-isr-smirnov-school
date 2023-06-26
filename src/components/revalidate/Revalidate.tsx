@@ -8,7 +8,7 @@ type Props = {
 const Revalidate = ({ url }: Props) => {
 	const handleClick = () => {
 		fetch(
-			`${process.env.WORDPRESS_API_URL}/api/revalidate?path=/${url}&token=L4aoVVfVZ8IZ76tTQGB9yMUT?IRbTUEibYZKKl1`,
+			`https://wp-nextjs-isr-smirnov-school.vercel.app/api/revalidate?path=/${url}&token=L4aoVVfVZ8IZ76tTQGB9yMUT?IRbTUEibYZKKl1`,
 		);
 	};
 
