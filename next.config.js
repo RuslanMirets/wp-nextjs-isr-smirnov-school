@@ -3,6 +3,7 @@ const nextConfig = {
 	reactStrictMode: true,
 	env: {
 		WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
+		REVALIDATION_TOKEN: process.env.REVALIDATION_TOKEN,
 	},
 	images: {
 		domains: [

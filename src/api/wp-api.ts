@@ -5,7 +5,7 @@ export const fetchData = async (query: string) => {
 
 	const start = Date.now();
 
-	const response = await fetch(`http://localhost/smirnov-school/graphql`, {
+	const response = await fetch(`${process.env.WORDPRESS_API_URL}/graphql`, {
 		next: { revalidate: 60 },
 		headers,
 		method: "POST",

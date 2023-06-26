@@ -1,0 +1,16 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+
+	figure {
+		a {
+			display: inline-block;
+		}
+
+		figcaption {
+			color: #808080;
+			text-align: center;
+		}
+	}
+}
