@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: true,
+	// reactStrictMode: true,
 	env: {
 		WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
 		REVALIDATION_TOKEN: process.env.REVALIDATION_TOKEN,

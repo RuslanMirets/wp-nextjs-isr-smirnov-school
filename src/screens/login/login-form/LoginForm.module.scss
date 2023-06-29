@@ -1,0 +1,146 @@
+.root {
+	display: flex;
+	flex-direction: column;
+}
+
+.fields {
+	margin-bottom: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.field {
+	position: relative;
+
+	.fieldInput {
+		// font-family: "Manrope", sans-serif;
+		width: 100%;
+		min-height: 40px;
+		padding: 10px 30px 10px 40px;
+		background-color: #fff;
+		box-shadow: none;
+		border-radius: 6px;
+		font-size: 16px;
+		line-height: 22px;
+		color: #4d5c6d;
+		border: 1px solid #e7e9ec;
+
+		&:focus {
+			border-color: #6400e0;
+			box-shadow: 0px 0px 0px 2px rgba(100, 0, 224, 0.1);
+			outline: none;
+		}
+	}
+
+	.fieldIcon {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		left: 14px;
+	}
+
+	.fieldEye {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 14px;
+		color: #122b46;
+		opacity: 0.5;
+		transition: color 0.3s ease-in-out;
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		&:hover {
+			color: #1e42dd;
+		}
+	}
+}
+
+.remember {
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.forgetLink {
+		font-size: 14px;
+		line-height: 21px;
+		color: #5a5a5a;
+		transition: color 0.3s ease-in-out;
+
+		&:hover {
+			color: #1e42dd;
+		}
+	}
+}
+
+.checkbox {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+
+	.checkboxInput {
+		position: absolute;
+		z-index: -1;
+		opacity: 0;
+
+		&:checked {
+			& + .checkboxStyle {
+				background-color: #6400e0;
+				border-color: #6400e0;
+
+				.checkboxCheck {
+					display: block;
+				}
+			}
+		}
+	}
+	.checkboxStyle {
+		margin-right: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		border-radius: 5px;
+		background-color: #fff;
+		border: 1px solid #e7e9ec;
+
+		.checkboxCheck {
+			display: none;
+			color: #fff;
+		}
+	}
+
+	.checkboxCaption {
+		font-size: 14px;
+		line-height: 21px;
+		color: #122b46;
+	}
+}
+
+.submit {
+	margin-bottom: 30px;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 32px;
+	color: #fff;
+	background-color: #385dff;
+	padding: 0 30px;
+	height: 42px;
+	transition: background-color 0.3s ease-in-out;
+
+	&:hover {
+		background-color: #1e42dd;
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+}

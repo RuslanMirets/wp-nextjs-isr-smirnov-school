@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const fetchData = async (query: string) => {
 	const headers = { "Content-Type": "application/json" };
 
@@ -23,18 +21,3 @@ export const fetchData = async (query: string) => {
 
 	// return response.json();
 };
-
-// export const fetchData = async (query: string) => {
-// 	const start = Date.now();
-
-// 	const response = await axios.request({
-// 		method: "POST",
-// 		url: `${process.env.WORDPRESS_API_URL}/graphql`,
-// 		headers: { "Content-Type": "application/json" },
-// 		data: { query: query },
-// 	});
-
-// 	const end = Date.now() - start;
-
-// 	return { ...response.data, requestTime: end };
-// };

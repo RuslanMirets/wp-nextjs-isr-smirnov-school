@@ -3,6 +3,7 @@ import styles from "./Header.module.scss";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import Container from "@/src/ui/container/Container";
+import { Button } from "@mui/material";
 // import { signOut, useSession } from "next-auth/react";
 // import { Button } from "@mui/material";
 
@@ -44,6 +45,11 @@ const Header = () => {
 							))}
 						</ul>
 					</nav>
+					<div className={styles.auth}>
+						<Link href="/login">
+							<Button variant="contained">Войти</Button>
+						</Link>
+					</div>
 					{/* {status !== "loading" && (
 						<div className={styles.auth}>
 							{data && (
