@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button } from "@chakra-ui/react";
 import styles from "./Revalidate.module.scss";
 
 type Props = {
@@ -13,7 +13,7 @@ const Revalidate = ({ url }: Props) => {
 	};
 
 	return (
-		<Button className={styles.root} variant="contained" onClick={handleClick}>
+		<Button className={styles.root} onClick={handleClick}>
 			Revalidate
 		</Button>
 	);

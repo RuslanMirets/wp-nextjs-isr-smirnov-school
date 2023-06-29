@@ -1,11 +1,17 @@
 import Layout from "@/src/components/Layout";
-import { ProductsType } from "@/src/types/product.interface";
+import { IProducts } from "@/src/types/product.interface";
 import Container from "@/src/ui/container/Container";
 import Heading from "@/src/ui/heading/Heading";
 import styles from "./Products.module.scss";
 import ProductCard from "@/src/components/product-card/ProductCard";
+import { useQuery } from "@apollo/client";
+import { ProductApollo } from "@/src/apollo/product.apollo";
 
-const Products = ({ products }: ProductsType) => {
+const Products = () => {
+	const { data } = useQuery(ProductApollo.GET_ALL);
+
+	const products: IProducts[] = data?.products.nodes;
+
 	return (
 		<Layout title="Товары">
 			<Container>

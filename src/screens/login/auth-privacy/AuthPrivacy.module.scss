@@ -17,19 +17,19 @@
 	}
 }
 
-.dialogTitle {
-	margin-bottom: 30px;
-	font-weight: 400;
-	font-size: 20px;
-	line-height: 24px;
-	color: #122b46;
-	padding: 17px 30px;
-	background-color: #fbfbfc;
-}
-
 .content {
 	overflow: hidden;
 	padding-bottom: 40px;
+
+	.title {
+		margin-bottom: 30px;
+		font-weight: 400;
+		font-size: 20px;
+		line-height: 24px;
+		color: #122b46;
+		padding: 17px 30px;
+		background-color: #fbfbfc;
+	}
 
 	.info {
 		&:not(:last-child) {

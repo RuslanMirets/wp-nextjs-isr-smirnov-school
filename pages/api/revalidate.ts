@@ -30,6 +30,8 @@
 // 	}
 // }
 
+// http://localhost:3000/api/revalidate?path=/blog&token=randomsecrettoken
+
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

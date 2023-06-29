@@ -1,16 +1,19 @@
+import { addApolloState, initializeApollo } from "@/src/apollo/apolloClient";
+import { PostApollo } from "@/src/apollo/post.apollo";
 import Post from "@/src/screens/post/Post";
-import { PostService } from "@/src/services/post.service";
-import { IPosts, PostType } from "@/src/types/post.interface";
+import { IPosts } from "@/src/types/post.interface";
 import { GetStaticPaths, GetStaticProps } from "next";
 
-const PostPage = ({ post }: PostType) => {
-	return <Post post={post} />;
+const PostPage = () => {
+	return <Post />;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const response = await PostService.getAll();
+	const apolloClient = initializeApollo();
 
-	const posts: IPosts[] = response?.data?.posts?.nodes;
+	const { data } = await apolloClient.query({ query: PostApollo.GET_ALL });
+
+	const posts: IPosts[] = data?.posts?.nodes;
 
 	const paths = posts.map((post) => {
 		return {
@@ -28,15 +31,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
 	const slug = context.params?.slug as string;
-	const response = await PostService.getBySlug(slug);
 
-	const post = response.data.post;
+	const apolloClient = initializeApollo();
 
-	return {
-		props: {
-			post: post,
-		},
-	};
+	await apolloClient.query({
+		query: PostApollo.GET_BY_SLUG,
+		variables: { id: slug },
+	});
+
+	return addApolloState(apolloClient, {
+		props: {},
+	});
 };
 
 export default PostPage;

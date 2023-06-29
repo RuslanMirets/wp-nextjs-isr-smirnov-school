@@ -1,12 +1,17 @@
+import { useApollo } from "@/src/apollo/apolloClient";
 import "@/styles/globals.scss";
-import { CssBaseline } from "@mui/material";
+import { ApolloProvider } from "@apollo/client";
+import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
+	const apolloClient = useApollo(pageProps);
+
 	return (
-		<>
-			<CssBaseline />
-			<Component {...pageProps} />
-		</>
+		<ApolloProvider client={apolloClient}>
+			<ChakraProvider>
+				<Component {...pageProps} />
+			</ChakraProvider>
+		</ApolloProvider>
 	);
 }
