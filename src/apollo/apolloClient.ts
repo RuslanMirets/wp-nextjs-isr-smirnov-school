@@ -9,6 +9,8 @@ import {
 import { onError } from "@apollo/client/link/error";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
+import { setContext } from "@apollo/client/link/context";
+import Cookies from "js-cookie";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -28,6 +30,16 @@ const httpLink = new HttpLink({
 	uri: `${process.env.WORDPRESS_API_URL}/graphql`,
 	credentials: "same-origin",
 });
+
+// const authLink = setContext((_, { headers }) => {
+// 	const token = Cookies.get("jwtAuthToken");
+// 	return {
+// 		headers: {
+// 			...headers,
+// 			authorization: token ? `Bearer ${token}` : "",
+// 		},
+// 	};
+// });
 
 function createApolloClient() {
 	return new ApolloClient({

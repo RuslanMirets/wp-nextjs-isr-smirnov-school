@@ -9,7 +9,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import clsx from "clsx";
-import { AuthService } from "@/src/services/auth.service";
+import { useMutation } from "@apollo/client";
+import { AuthApollo } from "@/src/apollo/auth.apollo";
+import Cookies from "js-cookie";
 
 const LoginForm = () => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -25,8 +27,18 @@ const LoginForm = () => {
 		},
 	});
 
-	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-		await AuthService.login(data.email, data.password);
+	const [loginMutation] = useMutation(AuthApollo.LOGIN);
+
+	const onSubmit: SubmitHandler<FieldValues> = async (dto) => {
+		const { data } = await loginMutation({
+			variables: {
+				username: dto.email,
+				password: dto.password,
+			},
+		});
+
+		Cookies.set("jwtAuthToken", data.login.user.jwtAuthToken);
+		Cookies.set("jwtRefreshToken", data.login.user.jwtRefreshToken);
 	};
 
 	return (
