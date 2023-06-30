@@ -2,12 +2,19 @@ import styles from "./RequestTime.module.scss";
 
 type Props = {
 	requestTime: number;
+	receiveTime?: number;
 };
 
-const RequestTime = ({ requestTime }: Props) => {
+const RequestTime = ({ requestTime, receiveTime }: Props) => {
 	return (
 		<div className={styles.root}>
-			Время выполнения запроса: {requestTime} мс
+			<div>
+				Время выполнения запроса {Boolean(receiveTime) && "на этапе сборки"}:{" "}
+				{requestTime} мс
+			</div>
+			{Boolean(receiveTime) && (
+				<div>Время получения данных: {receiveTime} мс</div>
+			)}
 		</div>
 	);
 };

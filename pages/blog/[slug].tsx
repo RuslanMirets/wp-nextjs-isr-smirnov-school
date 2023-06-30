@@ -2,10 +2,11 @@ import { addApolloState, initializeApollo } from "@/src/apollo/apolloClient";
 import { PostApollo } from "@/src/apollo/post.apollo";
 import Post from "@/src/screens/post/Post";
 import { IPosts } from "@/src/types/post.interface";
+import { IRequestTime } from "@/src/types/request.interface";
 import { GetStaticPaths, GetStaticProps } from "next";
 
-const PostPage = () => {
-	return <Post />;
+const PostPage = ({ requestTime }: IRequestTime) => {
+	return <Post requestTime={requestTime} />;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -34,13 +35,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 	const apolloClient = initializeApollo();
 
+	const start = Date.now();
+
 	await apolloClient.query({
 		query: PostApollo.GET_BY_SLUG,
 		variables: { id: slug },
 	});
 
+	const end = Date.now() - start;
+
 	return addApolloState(apolloClient, {
-		props: {},
+		props: {
+			requestTime: end,
+		},
 	});
 };
 

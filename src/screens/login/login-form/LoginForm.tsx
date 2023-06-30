@@ -12,6 +12,7 @@ import clsx from "clsx";
 import { useMutation } from "@apollo/client";
 import { AuthApollo } from "@/src/apollo/auth.apollo";
 import Cookies from "js-cookie";
+import RequestTime from "@/src/components/request-time/RequestTime";
 
 const LoginForm = () => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -29,13 +30,20 @@ const LoginForm = () => {
 
 	const [loginMutation] = useMutation(AuthApollo.LOGIN);
 
+	const [time, setTime] = useState(0);
+
 	const onSubmit: SubmitHandler<FieldValues> = async (dto) => {
+		const start = Date.now();
+
 		const { data } = await loginMutation({
 			variables: {
 				username: dto.email,
 				password: dto.password,
 			},
 		});
+
+		const end = Date.now() - start;
+		setTime(end);
 
 		Cookies.set("jwtAuthToken", data.login.user.jwtAuthToken);
 		Cookies.set("jwtRefreshToken", data.login.user.jwtRefreshToken);
@@ -95,6 +103,8 @@ const LoginForm = () => {
 			>
 				{methods.formState.isSubmitting ? "Вход..." : "Войти"}
 			</button>
+			{/* <div>{time}</div> */}
+			<RequestTime requestTime={time} />
 		</form>
 	);
 };
