@@ -1,56 +1,56 @@
-import { onError } from "@apollo/client/link/error";
 import { useMemo } from "react";
 import {
 	ApolloClient,
 	HttpLink,
 	InMemoryCache,
 	NormalizedCacheObject,
-	from,
 } from "@apollo/client";
 import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
 import { setContext } from "@apollo/client/link/context";
-import Cookies from "js-cookie";
+import nookies from "nookies";
+import { GetServerSidePropsContext } from "next";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
+export const COOKIES_TOKEN_NAME = "jwtAuthToken";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-	if (graphQLErrors)
-		graphQLErrors.forEach(({ message, locations, path }) =>
-			console.log(
-				`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-			),
-		);
-	if (networkError) console.log(`[Network error]: ${networkError}`);
-});
-
-const httpLink = new HttpLink({
-	uri: `${process.env.WORDPRESS_API_URL}/graphql`,
-	credentials: "same-origin",
-});
-
-const authLink = setContext((_, { headers }) => {
-	const token = Cookies.get("jwtAuthToken");
-	return {
-		headers: {
-			...headers,
-			authorization: token ? `Bearer ${token}` : "",
-		},
-	};
-});
-
-function createApolloClient() {
-	return new ApolloClient({
-		ssrMode: typeof window === "undefined",
-		link: from([errorLink, authLink.concat(httpLink)]),
-		cache: new InMemoryCache(),
+function createApolloClient(ctx?: GetServerSidePropsContext) {
+	const httpLink = new HttpLink({
+		uri: `${process.env.WORDPRESS_API_URL}/graphql`,
+		credentials: "same-origin",
 	});
+
+	const authLink = setContext((_, { headers }) => {
+		const cookies = nookies.get(ctx);
+		const token = cookies.jwtAuthToken;
+
+		return {
+			headers: {
+				...headers,
+				authorization: token ? `Bearer ${token}` : "",
+			},
+		};
+	});
+
+	if (ctx) {
+		return new ApolloClient({
+			ssrMode: typeof window === "undefined",
+			link: authLink.concat(httpLink),
+			cache: new InMemoryCache(),
+		});
+	} else {
+		return new ApolloClient({
+			ssrMode: typeof window === "undefined",
+			link: httpLink,
+			cache: new InMemoryCache(),
+		});
+	}
 }
 
-export function initializeApollo(initialState = null) {
-	const _apolloClient = apolloClient ?? createApolloClient();
+export function initializeApollo(initialState = null, ctx?: any) {
+	const _apolloClient = apolloClient ?? createApolloClient(ctx);
 
 	if (initialState) {
 		const existingCache = _apolloClient.extract();

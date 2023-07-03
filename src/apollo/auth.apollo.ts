@@ -5,13 +5,9 @@ export const AuthApollo = {
 		mutation Login($username: String!, $password: String!) {
 			login(input: { username: $username, password: $password }) {
 				user {
-					id
-					userId
+					databaseId
 					name
 					email
-					avatar {
-						url
-					}
 					jwtAuthToken
 					jwtRefreshToken
 				}

@@ -12,7 +12,6 @@ const ProductCard = ({ product }: ProductType) => {
 					width={300}
 					height={300}
 					alt={product.title}
-					priority={true}
 				/>
 			) : (
 				<Image
@@ -21,7 +20,6 @@ const ProductCard = ({ product }: ProductType) => {
 					width={300}
 					height={300}
 					alt={product.title}
-					priority={true}
 				/>
 			)}
 			<div className={styles.content}>

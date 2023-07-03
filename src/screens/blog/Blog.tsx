@@ -6,18 +6,19 @@ import { IRequestTime } from "@/src/types/request.interface";
 import Container from "@/src/ui/container/Container";
 import Heading from "@/src/ui/heading/Heading";
 import { useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const Blog = ({ requestTime }: IRequestTime) => {
-	const start = Date.now();
+const Blog = ({ requestBuildTime }: IRequestTime) => {
+	const [requestTime, setRequestTime] = useState(0);
 
-	const { data } = useQuery(PostApollo.GET_ALL);
+	const { data } = useQuery(PostApollo.GET_ALL, {
+		onCompleted: (data) => {
+			const requestTime = new Date().getTime() - requestStartTime;
+			setRequestTime(requestTime);
+		},
+	});
 
-	const end = Date.now() - start;
-	const [time, setTime] = useState(0);
-	useEffect(() => {
-		setTime(end);
-	}, []);
+	const requestStartTime = new Date().getTime();
 
 	const posts = data?.posts.nodes;
 
@@ -25,7 +26,10 @@ const Blog = ({ requestTime }: IRequestTime) => {
 		<Layout title="Блог">
 			<Container>
 				<Heading>Блог</Heading>
-				<RequestTime requestTime={requestTime} receiveTime={time} />
+				<RequestTime
+					requestBuildTime={requestBuildTime}
+					requestTime={requestTime}
+				/>
 				<PostsList posts={posts} />
 			</Container>
 		</Layout>

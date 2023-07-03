@@ -1,20 +1,15 @@
+import { IRequestTime } from "@/src/types/request.interface";
 import styles from "./RequestTime.module.scss";
 
-type Props = {
-	requestTime: number;
-	receiveTime?: number;
-};
-
-const RequestTime = ({ requestTime, receiveTime }: Props) => {
+const RequestTime = ({ requestBuildTime, requestTime }: IRequestTime) => {
 	return (
 		<div className={styles.root}>
-			<div>
-				Время выполнения запроса {Boolean(receiveTime) && "на этапе сборки"}:{" "}
-				{requestTime} мс
-			</div>
-			{Boolean(receiveTime) && (
-				<div>Время получения данных: {receiveTime} мс</div>
+			{Boolean(requestBuildTime) && (
+				<div>
+					Время выполнения запроса на этапе сборки: {requestBuildTime} мс
+				</div>
 			)}
+			<div>Время выполнения запроса: {requestTime} мс</div>
 		</div>
 	);
 };

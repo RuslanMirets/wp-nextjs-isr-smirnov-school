@@ -4,6 +4,8 @@ const nextConfig = {
 	env: {
 		WORDPRESS_API_URL: process.env.WORDPRESS_API_URL,
 		REVALIDATION_TOKEN: process.env.REVALIDATION_TOKEN,
+		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+		NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 	},
 	images: {
 		domains: [

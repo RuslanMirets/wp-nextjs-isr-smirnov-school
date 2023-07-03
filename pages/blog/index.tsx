@@ -4,8 +4,8 @@ import Blog from "@/src/screens/blog/Blog";
 import { IRequestTime } from "@/src/types/request.interface";
 import { GetStaticProps } from "next";
 
-const BlogPage = ({ requestTime }: IRequestTime) => {
-	return <Blog requestTime={requestTime} />;
+const BlogPage = ({ requestBuildTime }: IRequestTime) => {
+	return <Blog requestBuildTime={requestBuildTime} />;
 };
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 	return addApolloState(apolloClient, {
 		props: {
-			requestTime: end,
+			requestBuildTime: end,
 		},
 	});
 };

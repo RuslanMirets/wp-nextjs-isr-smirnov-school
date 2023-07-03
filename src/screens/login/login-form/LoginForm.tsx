@@ -9,12 +9,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import clsx from "clsx";
-import { useMutation } from "@apollo/client";
-import { AuthApollo } from "@/src/apollo/auth.apollo";
-import Cookies from "js-cookie";
-import RequestTime from "@/src/components/request-time/RequestTime";
+import { signIn } from "next-auth/react";
+import { useAuthTimeStore } from "@/src/store";
 
 const LoginForm = () => {
+	const setAuthTime = useAuthTimeStore((state: any) => state.setTime);
+
 	const [passwordVisible, setPasswordVisible] = useState(false);
 
 	const togglePasswordVisible = () => {
@@ -28,25 +28,23 @@ const LoginForm = () => {
 		},
 	});
 
-	const [loginMutation] = useMutation(AuthApollo.LOGIN);
-
-	const [time, setTime] = useState(0);
-
-	const onSubmit: SubmitHandler<FieldValues> = async (dto) => {
+	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 		const start = Date.now();
 
-		const { data } = await loginMutation({
-			variables: {
-				username: dto.email,
-				password: dto.password,
-			},
+		await signIn("credentials", {
+			email: data.email,
+			password: data.password,
+			redirect: false,
+		}).then((callback) => {
+			if (callback?.ok) {
+				const end = Date.now() - start;
+				setAuthTime(end);
+			}
+
+			if (callback?.error) {
+				console.log(callback.error);
+			}
 		});
-
-		const end = Date.now() - start;
-		setTime(end);
-
-		Cookies.set("jwtAuthToken", data.login.user.jwtAuthToken);
-		Cookies.set("jwtRefreshToken", data.login.user.jwtRefreshToken);
 	};
 
 	return (
@@ -103,8 +101,6 @@ const LoginForm = () => {
 			>
 				{methods.formState.isSubmitting ? "Вход..." : "Войти"}
 			</button>
-			{/* <div>{time}</div> */}
-			<RequestTime requestTime={time} />
 		</form>
 	);
 };

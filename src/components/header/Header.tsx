@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import clsx from "clsx";
 import Container from "@/src/ui/container/Container";
 import { Button } from "@chakra-ui/react";
+import { signOut, useSession } from "next-auth/react";
+import Cookies from "js-cookie";
 
 interface IMenuLinks {
 	title: string;
@@ -22,6 +24,13 @@ const menuLinks: IMenuLinks[] = [
 
 const Header = () => {
 	const { pathname } = useRouter();
+	const { data, status } = useSession();
+
+	const handleLogout = () => {
+		Cookies.remove("jwtAuthToken");
+		Cookies.remove("jwtRefreshToken");
+		signOut();
+	};
 
 	return (
 		<header className={styles.root}>
@@ -42,11 +51,24 @@ const Header = () => {
 							))}
 						</ul>
 					</nav>
-					<div className={styles.auth}>
-						<Link href="/login">
-							<Button>Войти</Button>
-						</Link>
-					</div>
+					{status !== "loading" && (
+						<div className={styles.auth}>
+							{data && (
+								<>
+									<div className={styles.user}>
+										Вы вошли как
+										<Link href="/profile">{data?.user?.name}</Link>
+									</div>
+									<Button onClick={handleLogout}>Выйти</Button>
+								</>
+							)}
+							{!data && (
+								<Link href="/login">
+									<Button>Войти</Button>
+								</Link>
+							)}
+						</div>
+					)}
 				</div>
 			</Container>
 		</header>

@@ -17,7 +17,6 @@ const PostCard = ({ post }: Props) => {
 					width={300}
 					height={300}
 					alt={post.title}
-					priority={true}
 				/>
 			) : (
 				<Image
@@ -26,7 +25,6 @@ const PostCard = ({ post }: Props) => {
 					width={300}
 					height={300}
 					alt={post.title}
-					priority={true}
 				/>
 			)}
 			<div className={styles.content}>

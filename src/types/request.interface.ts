@@ -1,3 +1,4 @@
 export interface IRequestTime {
-	requestTime: number;
+	requestBuildTime?: number;
+	requestTime?: number;
 }

@@ -5,8 +5,8 @@ import { IPosts } from "@/src/types/post.interface";
 import { IRequestTime } from "@/src/types/request.interface";
 import { GetStaticPaths, GetStaticProps } from "next";
 
-const PostPage = ({ requestTime }: IRequestTime) => {
-	return <Post requestTime={requestTime} />;
+const PostPage = ({ requestBuildTime }: IRequestTime) => {
+	return <Post requestBuildTime={requestBuildTime} />;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 	return addApolloState(apolloClient, {
 		props: {
-			requestTime: end,
+			requestBuildTime: end,
 		},
 	});
 };
