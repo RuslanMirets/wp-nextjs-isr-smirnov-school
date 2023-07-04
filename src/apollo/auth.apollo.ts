@@ -14,4 +14,11 @@ export const AuthApollo = {
 			}
 		}
 	`,
+	REFRESH_TOKEN: gql`
+		mutation RefreshAuthToken($jwtRefreshToken: String!) {
+			refreshJwtAuthToken(input: { jwtRefreshToken: $jwtRefreshToken }) {
+				authToken
+			}
+		}
+	`,
 };

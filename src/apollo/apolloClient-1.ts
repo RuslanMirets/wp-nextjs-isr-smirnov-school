@@ -11,8 +11,8 @@ import merge from "deepmerge";
 import isEqual from "lodash/isEqual";
 import { setContext } from "@apollo/client/link/context";
 import Cookies from "js-cookie";
-import jwtDecode, { JwtPayload } from "jwt-decode";
 import { AuthApollo } from "./auth.apollo";
+import jwtDecode from "jwt-decode";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -23,51 +23,44 @@ const customFetch = (uri: string, options: any) => {
 	return fetch(`${uri}?opname=${operationName}`, options);
 };
 
-export function isRefreshNeeded(token?: string | null) {
+export function getTokenState(token?: string | null) {
 	if (!token) {
+		console.log("No token");
 		return { valid: false, needRefresh: true };
 	}
 
-	const decoded = jwtDecode<JwtPayload>(token);
-
+	const decoded: any = jwtDecode(token);
 	if (!decoded) {
 		return { valid: false, needRefresh: true };
+	} else if (decoded.exp * 1000 <= Date.now()) {
+		return { valid: true, needRefresh: true };
+	} else {
+		return { valid: true, needRefresh: false };
 	}
-	if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-		return { valid: false, needRefresh: true };
-	}
-	return { valid: true, needRefresh: false };
 }
 
 const refreshAuthToken = async () => {
-	const refreshToken = Cookies.get("jwtRefreshToken");
-
 	const apolloClient = initializeApollo();
 
-	if (refreshToken) {
-		const newToken = await apolloClient
-			.mutate({
-				mutation: AuthApollo.REFRESH_TOKEN,
-				variables: { jwtRefreshToken: refreshToken },
-			})
-			.then((res) => {
-				const newAccessToken = res.data?.refreshJwtAuthToken?.authToken;
-				Cookies.set("jwtAuthToken", newAccessToken);
-				return newAccessToken;
-			});
-
-		return newToken;
-	}
+	return apolloClient
+		.mutate({
+			mutation: AuthApollo.REFRESH_TOKEN,
+		})
+		.then((res) => {
+			const newAccessToken = res.data?.refreshJwtAuthToken?.authToken;
+			Cookies.set("jwtAuthToken", newAccessToken);
+			return newAccessToken;
+		});
 };
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
 	if (graphQLErrors)
 		graphQLErrors.forEach(({ message, locations, path }) =>
-			console.error(
+			console.log(
 				`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
 			),
 		);
-	if (networkError) console.error(`[Network error]: ${networkError}`);
+	if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
 const httpLink = new HttpLink({
@@ -77,31 +70,42 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext(async (request, { headers }) => {
-	if (request.operationName !== "RefreshAuthToken") {
-		let token = Cookies.get("jwtAuthToken");
-
-		const shouldRefresh = isRefreshNeeded(token);
-
-		if (shouldRefresh.needRefresh) {
-			const refreshPromise = await refreshAuthToken();
-
-			if (shouldRefresh.valid === false) {
-				token = await refreshPromise;
-			}
-		}
-
-		if (token) {
+	if (request.operationName == "RefreshAuthToken") {
+		const refreshToken = Cookies.get("jwtRefreshToken");
+		if (refreshToken) {
 			return {
 				headers: {
 					...headers,
-					authorization: `Bearer ${token}`,
+					authorization: `Bearer ${refreshToken}`,
 				},
 			};
+		} else {
+			return { headers };
 		}
-		return { headers };
 	}
 
-	return { headers };
+	let authToken = Cookies.get("jwtAuthToken");
+
+	const tokenState = getTokenState(authToken);
+
+	if (tokenState.needRefresh) {
+		const refreshPromise = refreshAuthToken();
+
+		if (tokenState.valid === false) {
+			authToken = await refreshPromise;
+		}
+	}
+
+	if (authToken) {
+		return {
+			headers: {
+				...headers,
+				authorization: `Bearer ${authToken}`,
+			},
+		};
+	} else {
+		return { headers };
+	}
 });
 
 function createApolloClient() {

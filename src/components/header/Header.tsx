@@ -20,6 +20,7 @@ const menuLinks: IMenuLinks[] = [
 	{ title: "Товары", url: "/products" },
 	// { title: "Курсы", url: "/courses" },
 	// { title: "Метрики", url: "/metrics", target: "_blank" },
+	{ title: "Мои заказы", url: "/my-orders" },
 ];
 
 const Header = () => {
