@@ -1,11 +1,11 @@
 import Link from "next/link";
 import styles from "./Header.module.scss";
 import { useRouter } from "next/router";
-import clsx from "clsx";
 import Container from "@/src/ui/container/Container";
 import { Button } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
+import classNames from "classnames";
 
 interface IMenuLinks {
 	title: string;
@@ -41,7 +41,9 @@ const Header = () => {
 							{menuLinks.map((item) => (
 								<li key={item.url}>
 									<Link
-										className={clsx(pathname === item.url && styles.active)}
+										className={classNames(
+											pathname === item.url && styles.active,
+										)}
 										href={item.url}
 										target={item.target}
 									>

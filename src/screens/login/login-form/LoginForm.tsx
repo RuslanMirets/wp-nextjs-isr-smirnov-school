@@ -8,9 +8,9 @@ import styles from "./LoginForm.module.scss";
 import { useState } from "react";
 import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import clsx from "clsx";
 import { signIn } from "next-auth/react";
 import { useAuthTimeStore } from "@/src/store";
+import classNames from "classnames";
 
 const LoginForm = () => {
 	const setAuthTime = useAuthTimeStore((state: any) => state.setTime);
@@ -93,7 +93,7 @@ const LoginForm = () => {
 				</Link>
 			</div>
 			<button
-				className={clsx(
+				className={classNames(
 					styles.submit,
 					methods.formState.isSubmitting && styles.disabled,
 				)}

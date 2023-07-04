@@ -1,15 +1,15 @@
-import clsx from "clsx";
 import styles from "./Login.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "./login-form/LoginForm";
 import AuthPrivacy from "./auth-privacy/AuthPrivacy";
 import Layout, { manrope } from "@/src/components/Layout";
+import classNames from "classnames";
 
 const Login = () => {
 	return (
 		<Layout title="Войти" withHeader={false}>
-			<div className={clsx(styles.root, manrope.className)}>
+			<div className={classNames(styles.root, manrope.className)}>
 				<div className={styles.canvas}>
 					<h1 className={styles.title}>
 						Школа рисунка и компьютерной графики
