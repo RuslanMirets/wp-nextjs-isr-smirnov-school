@@ -2,10 +2,24 @@ import { OrderApollo } from "@/src/apollo/order.apollo";
 import Layout from "@/src/components/Layout";
 import Container from "@/src/ui/container/Container";
 import { useQuery } from "@apollo/client";
-import React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const MyOrders = () => {
 	const { data, loading } = useQuery(OrderApollo.GET_BY_USER);
+
+	const router = useRouter();
+
+	const session = useSession();
+
+	useEffect(() => {
+		if (!session.data && session.status !== "loading") {
+			router.replace("/login");
+		}
+	}, [session, router]);
+
+	if (!session.data) return null;
 
 	return (
 		<Layout title="TEST">

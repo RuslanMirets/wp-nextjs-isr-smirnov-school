@@ -10,7 +10,7 @@ const ProfilePage = () => {
 
 	// useEffect(() => {
 	// 	if (!session.data && session.status !== "loading") {
-	// 		router.push("/login");
+	// 		router.replace("/login");
 	// 	}
 	// }, [session, router]);
 
