@@ -21,6 +21,7 @@ const menuLinks: IMenuLinks[] = [
 	// { title: "Курсы", url: "/courses" },
 	// { title: "Метрики", url: "/metrics", target: "_blank" },
 	{ title: "Мои заказы", url: "/my-orders" },
+	{ title: "Мероприятия", url: "/events" },
 ];
 
 const Header = () => {

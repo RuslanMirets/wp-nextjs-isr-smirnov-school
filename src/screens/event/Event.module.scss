@@ -1,0 +1,11 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.ticket {
+	padding: 10px;
+	border: 1px solid #d2d5d8;
+	border-radius: 10px;
+}

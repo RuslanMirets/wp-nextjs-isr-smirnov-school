@@ -2,6 +2,7 @@ import { onError } from "@apollo/client/link/error";
 import { useMemo } from "react";
 import {
 	ApolloClient,
+	ApolloLink,
 	HttpLink,
 	InMemoryCache,
 	NormalizedCacheObject,
@@ -70,9 +71,47 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 	if (networkError) console.error(`[Network error]: ${networkError}`);
 });
 
+export const middleware = new ApolloLink((operation, forward) => {
+	const session = Cookies.get("woo-session");
+	if (session) {
+		operation.setContext(({ headers = {} }) => ({
+			headers: {
+				"woocommerce-session": `Session ${session}`,
+			},
+		}));
+	}
+
+	return forward(operation);
+});
+
+export const afterware = new ApolloLink((operation, forward) => {
+	return forward(operation).map((response) => {
+		const context = operation.getContext();
+		const {
+			response: { headers },
+		} = context;
+
+		const session = headers.get("woocommerce-session");
+
+		if (session) {
+			if (session === "false") {
+				Cookies.remove("woo-session");
+			} else if (Cookies.get("woo-session") !== session) {
+				Cookies.set("woo-session", headers.get("woocommerce-session"));
+			}
+		}
+
+		return response;
+	});
+});
+
 const httpLink = new HttpLink({
-	uri: `${process.env.WORDPRESS_API_URL}/graphql`,
+	// uri: `${process.env.WORDPRESS_API_URL}/graphql`,
+	uri: "http://localhost/e-commerce/graphql",
 	credentials: "same-origin",
+	headers: {
+		"Content-Type": "application/json",
+	},
 	fetch: customFetch,
 });
 
@@ -100,14 +139,62 @@ const authLink = setContext(async (request, { headers }) => {
 		}
 		return { headers };
 	}
-
 	return { headers };
 });
+
+// =================================================
+const createSessionLink = () => {
+	return setContext(async ({ context: { headers: currentHeaders } = {} }) => {
+		const headers = { ...currentHeaders };
+		const sessionToken = Cookies.get("woo-session");
+		const authToken = Cookies.get("jwtAuthToken");
+
+		if (authToken) {
+			headers.Authorization = `Bearer ${authToken}`;
+		}
+
+		if (sessionToken) {
+			headers["woocommerce-session"] = `Session ${sessionToken}`;
+		}
+
+		if (authToken || sessionToken) {
+			return { headers };
+		}
+
+		return {};
+	});
+};
+const createUpdateLink = new ApolloLink((operation, forward) => {
+	return forward(operation).map((response) => {
+		const context = operation.getContext();
+		const {
+			response: { headers },
+		} = context;
+
+		const session = headers.get("woocommerce-session");
+
+		if (session) {
+			if (session === "false") {
+				Cookies.remove("woo-session");
+			} else if (Cookies.get("woo-session") !== session) {
+				Cookies.set("woo-session", headers.get("woocommerce-session"));
+			}
+		}
+
+		return response;
+	});
+});
+// =================================================
 
 function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === "undefined",
-		link: from([errorLink, authLink, httpLink]),
+		// link: from([
+		// 	errorLink,
+		// 	middleware.concat(afterware.concat(authLink.concat(httpLink))),
+		// ]),
+		// link: from([createSessionLink(), createUpdateLink, httpLink]),
+		link: from([errorLink, authLink.concat(httpLink)]),
 		cache: new InMemoryCache(),
 	});
 }
