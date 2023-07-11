@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 const MyOrders = () => {
-	const { data, loading } = useQuery(OrderApollo.GET_BY_USER);
+	const { data, loading, error } = useQuery(OrderApollo.GET_BY_USER);
 
 	const router = useRouter();
 
@@ -24,7 +24,13 @@ const MyOrders = () => {
 	return (
 		<Layout title="TEST">
 			<Container>
-				{loading ? <div>Loading...</div> : <div>{data.customer.email}</div>}
+				{loading ? (
+					<div>Loading...</div>
+				) : data ? (
+					<div>{data.customer.email}</div>
+				) : (
+					<div>{error?.message}</div>
+				)}
 			</Container>
 		</Layout>
 	);

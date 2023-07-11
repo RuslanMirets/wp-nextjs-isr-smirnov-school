@@ -1,6 +1,7 @@
 import { ProductType } from "@/src/types/product.interface";
 import styles from "./ProductCard.module.scss";
 import Image from "next/image";
+import AddToCart from "../add-to-cart/AddToCart";
 
 const ProductCard = ({ product }: ProductType) => {
 	return (
@@ -29,6 +30,7 @@ const ProductCard = ({ product }: ProductType) => {
 				) : (
 					<div>Цена отсутствует</div>
 				)}
+				<AddToCart product={product} />
 			</div>
 		</div>
 	);

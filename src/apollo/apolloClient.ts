@@ -2,6 +2,7 @@ import { onError } from "@apollo/client/link/error";
 import { useMemo } from "react";
 import {
 	ApolloClient,
+	ApolloLink,
 	HttpLink,
 	InMemoryCache,
 	NormalizedCacheObject,
@@ -72,6 +73,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const httpLink = new HttpLink({
 	uri: `${process.env.WORDPRESS_API_URL}/graphql`,
+	// uri: "http://localhost/e-commerce/graphql",
 	credentials: "same-origin",
 	fetch: customFetch,
 });
@@ -104,10 +106,44 @@ const authLink = setContext(async (request, { headers }) => {
 	return { headers };
 });
 
+export const middleware = new ApolloLink((operation, forward) => {
+	const session = Cookies.get("woo-session");
+	if (session) {
+		operation.setContext(({ headers = {} }) => ({
+			headers: {
+				"woocommerce-session": `Session ${session}`,
+			},
+		}));
+	}
+
+	return forward(operation);
+});
+
+export const afterware = new ApolloLink((operation, forward) => {
+	return forward(operation).map((response) => {
+		const context = operation.getContext();
+		const {
+			response: { headers },
+		} = context;
+
+		const session = headers.get("woocommerce-session");
+
+		if (session) {
+			if (session === "false") {
+				Cookies.remove("woo-session");
+			} else if (Cookies.get("woo-session") !== session) {
+				Cookies.set("woo-session", headers.get("woocommerce-session"));
+			}
+		}
+
+		return response;
+	});
+});
+
 function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === "undefined",
-		link: from([errorLink, authLink, httpLink]),
+		link: from([errorLink, middleware, afterware, authLink, httpLink]),
 		cache: new InMemoryCache(),
 	});
 }

@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const OrderApollo = {
 	GET_BY_USER: gql`
 		query Orders {
-			customer(customerId: 7938) {
+			customer {
 				email
 				orders {
 					nodes {

@@ -16,12 +16,12 @@
 .content {
 	display: flex;
 	flex-direction: column;
+	gap: 12px;
 	padding: 16px;
 	flex-grow: 1;
 }
 
 .title {
-	margin-bottom: 10px;
 	font-weight: 500;
 	flex-grow: 1;
 }
