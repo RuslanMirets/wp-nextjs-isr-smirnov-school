@@ -1,3 +1,6 @@
+import { CartApollo } from "@/src/apollo/cart.apollo";
+import { useCartStore } from "@/src/store/cart.store";
+import { useMutation, useQuery } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
 
 type Props = {
@@ -5,7 +8,39 @@ type Props = {
 };
 
 const RemoveFromCart = ({ cartKey }: Props) => {
-	return <Button colorScheme="red">Удалить</Button>;
+	const updateCart = useCartStore((state) => state.updateCart);
+
+	const { refetch, loading: getCartLoading } = useQuery(CartApollo.GET_CART, {
+		notifyOnNetworkStatusChange: true,
+	});
+
+	const [removeItem, { loading: removeLoading }] = useMutation(
+		CartApollo.REMOVE_ITEM_FROM_CART,
+		{
+			onCompleted: (data) => {
+				updateCart(data.removeItemsFromCart);
+				localStorage.setItem(
+					"woo-next-cart",
+					JSON.stringify(data.removeItemsFromCart),
+				);
+				refetch();
+			},
+		},
+	);
+
+	const handleRemoveItem = async (key: string) => {
+		await removeItem({ variables: { keys: key } });
+	};
+
+	return (
+		<Button
+			colorScheme="red"
+			onClick={() => handleRemoveItem(cartKey)}
+			isLoading={removeLoading || getCartLoading}
+		>
+			Удалить
+		</Button>
+	);
 };
 
 export default RemoveFromCart;

@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const PostApollo = {
 	GET_ALL: gql`
 		query getAll {
-			posts(where: { categoryNotIn: "366" }) {
+			posts(where: { categoryNotIn: "366" }, first: 999) {
 				nodes {
 					databaseId
 					slug

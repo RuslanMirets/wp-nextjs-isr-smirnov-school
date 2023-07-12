@@ -1,24 +1,27 @@
 import { CartApollo } from "@/src/apollo/cart.apollo";
+import { useCartStore } from "@/src/store/cart.store";
 import { ProductType } from "@/src/types/product.interface";
 import { useMutation, useQuery } from "@apollo/client";
 import { Button } from "@chakra-ui/react";
-import React from "react";
 
 const AddToCart = ({ product }: ProductType) => {
-	const { data: cartData, refetch } = useQuery(CartApollo.GET_CART, {
+	const updateCart = useCartStore((state) => state.updateCart);
+
+	const { refetch } = useQuery(CartApollo.GET_CART, {
 		notifyOnNetworkStatusChange: true,
-		onCompleted: () => {
-			// console.log(cartData);
-		},
 	});
 
-	const [addToCart, { data: addToCartData, loading: addToCartLoading }] =
-		useMutation(CartApollo.ADD_TO_CART, {
+	const [addToCart, { loading: addToCartLoading }] = useMutation(
+		CartApollo.ADD_TO_CART,
+		{
 			variables: { productId: product.databaseId },
-			onCompleted: () => {
+			onCompleted: (data) => {
+				updateCart(data.addToCart);
+				localStorage.setItem("woo-next-cart", JSON.stringify(data.addToCart));
 				refetch();
 			},
-		});
+		},
+	);
 
 	const handleAddToCart = async () => {
 		await addToCart();
