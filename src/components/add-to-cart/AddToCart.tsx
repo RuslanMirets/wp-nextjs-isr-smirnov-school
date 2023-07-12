@@ -2,9 +2,11 @@ import { CartApollo } from "@/src/apollo/cart.apollo";
 import { useCartStore } from "@/src/store/cart.store";
 import { ProductType } from "@/src/types/product.interface";
 import { useMutation, useQuery } from "@apollo/client";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 
 const AddToCart = ({ product }: ProductType) => {
+	const toast = useToast();
+
 	const updateCart = useCartStore((state) => state.updateCart);
 
 	const { refetch } = useQuery(CartApollo.GET_CART, {
@@ -19,6 +21,16 @@ const AddToCart = ({ product }: ProductType) => {
 				updateCart(data.addToCart);
 				localStorage.setItem("woo-next-cart", JSON.stringify(data.addToCart));
 				refetch();
+			},
+			onError: (error) => {
+				toast({
+					title: error.name,
+					description: error.message,
+					status: "error",
+					duration: 4000,
+					position: "bottom-left",
+					isClosable: true,
+				});
 			},
 		},
 	);

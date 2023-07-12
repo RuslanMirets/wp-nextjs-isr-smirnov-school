@@ -11,8 +11,11 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useAuthTimeStore } from "@/src/store";
 import classNames from "classnames";
+import { useToast } from "@chakra-ui/react";
 
 const LoginForm = () => {
+	const toast = useToast();
+
 	const setAuthTime = useAuthTimeStore((state: any) => state.setTime);
 
 	const [passwordVisible, setPasswordVisible] = useState(false);
@@ -43,6 +46,14 @@ const LoginForm = () => {
 
 			if (callback?.error) {
 				console.log(callback.error);
+				toast({
+					title: "Ошибка",
+					description: "Неверный email или пароль",
+					status: "error",
+					duration: 4000,
+					position: "bottom-left",
+					isClosable: true,
+				});
 			}
 		});
 	};
