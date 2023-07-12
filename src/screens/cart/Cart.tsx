@@ -8,7 +8,6 @@ import { ICartItem } from "@/src/types/cart.interface";
 
 const Cart = () => {
 	const { data, loading } = useQuery(CartApollo.GET_CART);
-
 	const cartItems: ICartItem[] = data?.cart.contents.nodes;
 
 	return (

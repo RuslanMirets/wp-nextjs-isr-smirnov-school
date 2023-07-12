@@ -35,9 +35,18 @@ export const CartApollo = {
 					total(format: RAW)
 					contents {
 						nodes {
+							key
+							quantity
+							total(format: RAW)
 							product {
 								node {
+									databaseId
 									title
+									featuredImage {
+										node {
+											sourceUrl
+										}
+									}
 								}
 							}
 						}
@@ -48,11 +57,28 @@ export const CartApollo = {
 	`,
 
 	REMOVE_ITEM_FROM_CART: gql`
-		mutation MyMutation($keys: [ID]) {
+		mutation RemoveItemFromCart($keys: [ID]) {
 			removeItemsFromCart(input: { keys: $keys }) {
 				cart {
-					total
-					isEmpty
+					total(format: RAW)
+					contents {
+						nodes {
+							key
+							quantity
+							total(format: RAW)
+							product {
+								node {
+									databaseId
+									title
+									featuredImage {
+										node {
+											sourceUrl
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}

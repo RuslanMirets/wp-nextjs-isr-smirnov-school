@@ -1,0 +1,26 @@
+.root {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	background-color: #319795;
+	color: #fff;
+	border-radius: 20px;
+	position: fixed;
+	top: 30px;
+	right: 30px;
+}
+
+.quantity {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	top: -6px;
+	left: -6px;
+	background-color: #fb7185;
+	border-radius: 50%;
+}

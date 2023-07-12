@@ -4,6 +4,7 @@ import Header from "./header/Header";
 import { Roboto, Manrope } from "next/font/google";
 import { PropsWithChildren } from "react";
 import Loader from "./loader/Loader";
+import CartIcon from "./cart-icon/CartIcon";
 
 const roboto = Roboto({
 	subsets: ["latin"],
@@ -25,6 +26,7 @@ const Layout = ({
 				{withHeader && <Header />}
 				<main>{children}</main>
 				<Loader />
+				<CartIcon />
 			</div>
 		</>
 	);

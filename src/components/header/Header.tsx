@@ -57,7 +57,6 @@ const Header = () => {
 					</nav>
 					{status !== "loading" && (
 						<div className={styles.auth}>
-							<Link href="/cart">Корзина</Link>
 							{data && (
 								<>
 									<div className={styles.user}>
