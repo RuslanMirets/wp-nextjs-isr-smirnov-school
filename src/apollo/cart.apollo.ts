@@ -6,7 +6,7 @@ export const CartApollo = {
 			cart {
 				total(format: RAW)
 				isEmpty
-				contents {
+				contents(first: 99) {
 					nodes {
 						key
 						quantity
@@ -33,7 +33,7 @@ export const CartApollo = {
 			addToCart(input: { productId: $productId, quantity: $quantity }) {
 				cart {
 					total(format: RAW)
-					contents {
+					contents(first: 99) {
 						nodes {
 							key
 							quantity
@@ -61,7 +61,7 @@ export const CartApollo = {
 			removeItemsFromCart(input: { keys: $keys }) {
 				cart {
 					total(format: RAW)
-					contents {
+					contents(first: 99) {
 						nodes {
 							key
 							quantity
