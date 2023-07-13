@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const PostApollo = {
 	GET_ALL: gql`
-		query getAll {
+		query GetAll {
 			posts(where: { categoryNotIn: "366" }, first: 999) {
 				nodes {
 					databaseId
@@ -20,7 +20,7 @@ export const PostApollo = {
 		}
 	`,
 	GET_BY_SLUG: gql`
-		query getBySlug($id: ID!) {
+		query GetBySlug($id: ID!) {
 			post(id: $id, idType: SLUG) {
 				databaseId
 				title
@@ -29,7 +29,7 @@ export const PostApollo = {
 		}
 	`,
 	GET_BY_SEARCH: gql`
-		query getBySearch($search: String) {
+		query GetBySearch($search: String) {
 			posts(where: { search: $search }) {
 				nodes {
 					databaseId

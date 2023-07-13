@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const ProductApollo = {
 	GET_ALL: gql`
-		query getAll {
+		query GetAll {
 			products(first: 999) {
 				nodes {
 					databaseId

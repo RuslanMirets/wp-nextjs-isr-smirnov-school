@@ -1,4 +1,6 @@
-import Cart from "@/src/screens/cart/Cart";
+import dynamic from "next/dynamic";
+
+const Cart = dynamic(() => import("@/src/screens/cart/Cart"), { ssr: false });
 
 const CartPage = () => {
 	return <Cart />;

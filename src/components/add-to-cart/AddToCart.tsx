@@ -19,7 +19,6 @@ const AddToCart = ({ product }: ProductType) => {
 			variables: { productId: product.databaseId },
 			onCompleted: (data) => {
 				updateCart(data.addToCart);
-				localStorage.setItem("woo-next-cart", JSON.stringify(data.addToCart));
 				refetch();
 			},
 			onError: (error) => {

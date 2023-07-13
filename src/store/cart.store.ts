@@ -1,18 +1,20 @@
 import { create } from "zustand";
+import { CartApollo } from "../apollo/cart.apollo";
+import { initializeApollo } from "../apollo/apolloClient";
 
 interface ICartStore {
 	cart: any;
 	updateCart: (item: any) => void;
+	cartLoading: boolean;
 }
 
-const getInitialCart = () => {
-	let cartData =
-		typeof window !== "undefined" && localStorage.getItem("woo-next-cart");
-	cartData = cartData !== null ? JSON.parse(cartData as string) : {};
-	return cartData;
-};
-
 export const useCartStore = create<ICartStore>()((set) => ({
-	cart: getInitialCart(),
+	cart: {},
 	updateCart: (item) => set({ cart: item }),
+	cartLoading: true,
 }));
+
+const apolloClient = initializeApollo();
+apolloClient.query({ query: CartApollo.GET_CART }).then((result) => {
+	useCartStore.setState({ cart: result.data, cartLoading: false });
+});

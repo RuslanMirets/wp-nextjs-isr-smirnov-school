@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const OrderApollo = {
 	GET_BY_USER: gql`
-		query Orders {
+		query Customer {
 			customer {
 				email
 				orders {
@@ -24,7 +24,7 @@ export const OrderApollo = {
 	`,
 
 	GET_PAYMENTS: gql`
-		query GetAll {
+		query GetPayments {
 			paymentGateways {
 				nodes {
 					id
@@ -37,7 +37,7 @@ export const OrderApollo = {
 	`,
 
 	CHECKOUT: gql`
-		mutation CHECKOUT_MUTATION(
+		mutation Checkout(
 			$paymentMethod: String
 			$firstName: String
 			$lastName: String
