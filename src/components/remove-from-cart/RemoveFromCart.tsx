@@ -10,7 +10,7 @@ type Props = {
 const RemoveFromCart = ({ cartKey }: Props) => {
 	const updateCart = useCartStore((state) => state.updateCart);
 
-	const { refetch, loading: getCartLoading } = useQuery(CartApollo.GET_CART, {
+	const { refetch } = useQuery(CartApollo.GET_CART, {
 		notifyOnNetworkStatusChange: true,
 	});
 
@@ -19,10 +19,6 @@ const RemoveFromCart = ({ cartKey }: Props) => {
 		{
 			onCompleted: (data) => {
 				updateCart(data.removeItemsFromCart);
-				localStorage.setItem(
-					"woo-next-cart",
-					JSON.stringify(data.removeItemsFromCart),
-				);
 				refetch();
 			},
 		},
@@ -36,7 +32,7 @@ const RemoveFromCart = ({ cartKey }: Props) => {
 		<Button
 			colorScheme="red"
 			onClick={() => handleRemoveItem(cartKey)}
-			isLoading={removeLoading || getCartLoading}
+			isLoading={removeLoading}
 		>
 			Удалить
 		</Button>

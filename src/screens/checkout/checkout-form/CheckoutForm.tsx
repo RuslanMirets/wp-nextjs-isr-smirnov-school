@@ -51,11 +51,9 @@ const CheckoutForm = () => {
 				phone: dto.phone,
 			},
 			onCompleted: (data) => {
-				localStorage.removeItem("woo-next-cart");
 				push(data.checkout.redirect);
 			},
 			onError: (error) => {
-				localStorage.removeItem("woo-next-cart");
 				toast({
 					title: error.name,
 					description: error.message,
