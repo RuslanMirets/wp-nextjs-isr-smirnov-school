@@ -10,6 +10,7 @@ import {
 	Td,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import styles from "./CartTable.module.scss";
 
 type Props = {
 	items: ICartItem[];
@@ -17,7 +18,7 @@ type Props = {
 
 const CartTable = ({ items }: Props) => {
 	return (
-		<TableContainer>
+		<TableContainer className={styles.root}>
 			<Table variant="simple">
 				<Thead>
 					<Tr>

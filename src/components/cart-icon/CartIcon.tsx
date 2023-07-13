@@ -19,7 +19,12 @@ const CartIcon = () => {
 
 	const { pathname } = useRouter();
 
-	if (!Object.keys(cart).length || totalQuantity == 0 || pathname == "/cart")
+	if (
+		!Object.keys(cart).length ||
+		totalQuantity == 0 ||
+		pathname == "/cart" ||
+		pathname == "/checkout"
+	)
 		return null;
 
 	return (
