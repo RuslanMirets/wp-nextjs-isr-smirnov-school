@@ -1,9 +1,8 @@
-import dynamic from "next/dynamic";
-
-const Cart = dynamic(() => import("@/src/screens/cart/Cart"), { ssr: false });
+import { withIsClient } from "@/src/hoc/withIsClient";
+import Cart from "@/src/screens/cart/Cart";
 
 const CartPage = () => {
 	return <Cart />;
 };
 
-export default CartPage;
+export default withIsClient(CartPage);

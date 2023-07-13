@@ -10,6 +10,12 @@
 	position: fixed;
 	top: 30px;
 	right: 30px;
+	opacity: 0.9;
+	transition: opacity 0.3s ease-in-out;
+
+	&:hover {
+		opacity: 1;
+	}
 }
 
 .quantity {

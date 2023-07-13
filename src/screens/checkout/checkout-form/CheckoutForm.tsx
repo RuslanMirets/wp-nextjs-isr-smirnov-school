@@ -1,7 +1,6 @@
 import { Button, Radio, RadioGroup, Stack, useToast } from "@chakra-ui/react";
 import styles from "./CheckoutForm.module.scss";
 import { useMutation, useQuery } from "@apollo/client";
-import { CartApollo } from "@/src/apollo/cart.apollo";
 import { ICartItem } from "@/src/types/cart.interface";
 import { OrderApollo } from "@/src/apollo/order.apollo";
 import { IPayments } from "@/src/types/order.interface";
@@ -11,15 +10,16 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@/src/ui/text-field/TextField";
 import { CheckoutFormData, CheckoutFormSchema } from "@/src/utils/validations";
+import { useCartStore } from "@/src/store/cart.store";
 
 const CheckoutForm = () => {
 	const toast = useToast();
 
 	const { push } = useRouter();
 
-	const { data: cartData, loading: cartLoading } = useQuery(
-		CartApollo.GET_CART,
-	);
+	const cart = useCartStore((state) => state.cart);
+	const cartLoading = useCartStore((state) => state.cartLoading);
+
 	const { data: paymentsData, loading: paymentsLoading } = useQuery(
 		OrderApollo.GET_PAYMENTS,
 	);
@@ -27,8 +27,8 @@ const CheckoutForm = () => {
 		OrderApollo.CHECKOUT,
 	);
 
-	const cartItems: ICartItem[] = cartData?.cart.contents.nodes;
-	const payments: IPayments[] = paymentsData?.paymentGateways.nodes;
+	const cartItems: ICartItem[] = cart.cart?.contents.nodes;
+	const payments: IPayments[] = paymentsData?.paymentGateways?.nodes;
 
 	const methods = useForm<CheckoutFormData>({
 		defaultValues: {
@@ -67,7 +67,7 @@ const CheckoutForm = () => {
 	};
 
 	if (cartLoading) {
-		return <div>Loading</div>;
+		return <div>Loading...</div>;
 	}
 
 	return (
@@ -86,12 +86,14 @@ const CheckoutForm = () => {
 				</div>
 				<div className={styles.box}>
 					<h3 className={styles.boxTitle}>Ваш заказ</h3>
+
 					<OrderTable items={cartItems} />
-					<div className={styles.total}>Всего: {cartData?.cart.total} ₽</div>
+
+					<div className={styles.total}>Всего: {cart.cart?.total} ₽</div>
 					<div className={styles.payments}>
 						{paymentsLoading ? (
 							<div>Loading...</div>
-						) : (
+						) : paymentsData?.paymentGateways ? (
 							<RadioGroup defaultValue="wc_cloudpayments_gateway">
 								<Stack>
 									{payments.map((item) => (
@@ -105,6 +107,8 @@ const CheckoutForm = () => {
 									))}
 								</Stack>
 							</RadioGroup>
+						) : (
+							<div>Не удалось загрузить методы оплаты!</div>
 						)}
 					</div>
 					<div className={styles.btnWrap}>
